@@ -1,0 +1,204 @@
+/* src/index.css */
+
+/* Global Reset */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f7f6; /* Light background */
+    color: #333;
+}
+
+/* Color Variable */
+:root {
+    --primary-color: #35c4c0; /* Teal */
+    --secondary-color: #44475a; /* Darker accent, used for the logo circle */
+}
+
+/* ======================================= */
+/* Auth Layout Container */
+/* ======================================= */
+.auth-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ======================================= */
+/* Left Side: Welcome and Register */
+/* ======================================= */
+.auth-left {
+    flex: 1; /* Takes 40% of the screen */
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+/* The fluid, blob shape visual effect */
+.auth-blob {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background-color: var(--secondary-color);
+    border-radius: 50%;
+    bottom: -300px;
+    left: -150px;
+}
+
+.auth-left-content {
+    z-index: 2; /* Ensures content is above the blob */
+}
+
+.auth-left h1 {
+    font-size: 3em;
+    margin-bottom: 0.5em;
+    font-weight: 700;
+}
+
+.auth-left p {
+    font-size: 1.2em;
+    margin-bottom: 2em;
+}
+
+.auth-left .register-btn {
+    background: white;
+    color: var(--primary-color);
+    border: none;
+    padding: 10px 30px;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.auth-left .register-btn:hover {
+    background: #f0f0f0;
+}
+
+/* ======================================= */
+/* Right Side: Login Form */
+/* ======================================= */
+.auth-right {
+    flex: 1.5; /* Takes 60% of the screen */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+    background-color: white;
+}
+
+.auth-form-box {
+    width: 100%;
+    max-width: 400px;
+}
+
+.auth-form-box h2 {
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 5px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 40px 12px 15px; /* Space for icon */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+/* Placeholder for icons (you'll need to install react-icons later) */
+.input-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+}
+
+.forgot-password {
+    text-align: right;
+    margin-bottom: 30px;
+    font-size: 0.9em;
+}
+
+.forgot-password a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.login-btn {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-bottom: 20px;
+}
+
+.login-btn:hover {
+    background-color: #2daaa7; /* Slightly darker teal */
+}
+
+.social-login p {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.social-icons button {
+    background: none;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 0 5px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.social-icons button img {
+    width: 20px;
+    height: 20px;
+}
+
+/* Spinner animation for profile picture upload */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Slide in animation for advanced search panel */
+@keyframes slideInRight {
+    0% { 
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    100% { 
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Bounce animation for typing indicator */
+@keyframes bounce {
+    0%, 60%, 100% {
+        transform: translateY(0);
+    }
+    30% {
+        transform: translateY(-10px);
+    }
+}
