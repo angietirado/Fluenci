@@ -2,28 +2,31 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Create uploads directory if it doesn't exist
-const uploadsDir = path.join(__dirname, '../uploads');
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
+// Vercel serverless: only /tmp is writable; local dev uses backend/uploads
+const uploadsDir = process.env.VERCEL
+    ? path.join('/tmp', 'fluenci-uploads')
+    : path.join(__dirname, '../uploads');
+
+try {
+    if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+} catch (err) {
+    console.warn('Could not create uploads directory:', err.message);
 }
 
-// Configure storage
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, uploadsDir);
     },
     filename: function (req, file, cb) {
-        // Create unique filename: timestamp-userId-originalname
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
         const ext = path.extname(file.originalname);
         cb(null, `profile-${req.user.id}-${uniqueSuffix}${ext}`);
-    }
+    },
 });
 
-// File filter - only allow images
 const fileFilter = (req, file, cb) => {
-    // Accept image files only
     if (file.mimetype.startsWith('image/')) {
         cb(null, true);
     } else {
@@ -31,14 +34,12 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
-// Configure multer
 const upload = multer({
     storage: storage,
     limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB limit
+        fileSize: 5 * 1024 * 1024,
     },
-    fileFilter: fileFilter
+    fileFilter: fileFilter,
 });
 
 module.exports = upload;
-
