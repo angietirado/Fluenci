@@ -20,6 +20,16 @@ Serve the React app and API from the same Vercel project.
 
 4. Deploy. Your app will be at `https://your-project.vercel.app` and the API at `https://your-project.vercel.app/api/v1/...`.
 
+5. **Important:** In any frontend-only project, **delete** `REACT_APP_API_URL` if you switch to this setup. Otherwise the old API URL stays baked into the build.
+
+### Migrating `fluenci-m5it` from API-only to full app
+
+1. **Settings → General → Root Directory** → clear it (use repository root, not `backend`).
+2. **Environment Variables** → remove `REACT_APP_API_URL` if present.
+3. Keep `MONGO_URI`, `JWT_SECRET`, `JWT_EXPIRE`, `NODE_ENV`.
+4. Redeploy → open `https://fluenci-m5it.vercel.app` → you should see the **login page**, not JSON.
+5. Test `https://fluenci-m5it.vercel.app/api/health` in the browser.
+
 ## Option B — Two projects (current split setup)
 
 | Project | Root Directory | Key env vars |

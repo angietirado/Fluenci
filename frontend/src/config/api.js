@@ -1,18 +1,33 @@
 /**
- * API base URL:
- * - Local dev: http://localhost:5000 (or REACT_APP_API_URL)
- * - Single Vercel deploy (same domain): leave REACT_APP_API_URL unset → relative /api/...
- * - Split deploy (separate API project): REACT_APP_API_URL=https://your-api.vercel.app
+ * Resolves API base URL at runtime (works after deploy without rebuilding env vars).
+ *
+ * - localhost → http://localhost:5000 (or REACT_APP_API_URL)
+ * - Production, same host as REACT_APP_API_URL → relative "" (/api/v1/...)
+ * - Production, different API host → REACT_APP_API_URL (split Vercel projects)
  */
-const configured = process.env.REACT_APP_API_URL;
-const base =
-    configured !== undefined && configured !== ''
-        ? configured
-        : process.env.NODE_ENV === 'production'
-          ? ''
-          : 'http://localhost:5000';
+function resolveApiUrl() {
+    const envUrl = (process.env.REACT_APP_API_URL || '').replace(/\/$/, '');
 
-export const API_URL = base.replace(/\/$/, '');
+    if (typeof window !== 'undefined' && window.location?.hostname) {
+        const { origin, hostname } = window.location;
+
+        if (hostname === 'localhost' || hostname === '127.0.0.1') {
+            return envUrl || 'http://localhost:5000';
+        }
+
+        // One Vercel project: UI and API share this origin → use /api/... paths
+        if (!envUrl || envUrl === origin) {
+            return '';
+        }
+
+        return envUrl;
+    }
+
+    if (envUrl) return envUrl;
+    return process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000';
+}
+
+export const API_URL = resolveApiUrl();
 
 /** Build a full API or static asset URL from a path like /api/v1/auth/me or /uploads/photo.jpg */
 export function apiUrl(path = '') {

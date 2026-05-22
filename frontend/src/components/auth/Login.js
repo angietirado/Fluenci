@@ -91,7 +91,8 @@ const Login = ({ onAuthSuccess, role }) => {
             
             // More specific error messages
             if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
-                setError(`Cannot connect to server at ${API_URL}. Check that the backend is running.`);
+                const target = API_URL || window.location.origin;
+                setError(`Cannot connect to server at ${target}. Check that the backend is running.`);
             } else if (err.message.includes('JSON')) {
                 setError('Server returned an invalid response. Please check the backend logs.');
             } else {
