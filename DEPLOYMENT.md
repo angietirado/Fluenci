@@ -7,6 +7,9 @@ Serve the React app and API from the same Vercel project.
 1. Create **one** Vercel project from `angietirado/Fluenci`.
 2. **Root Directory:** `./` (repository root).
 3. **Framework Preset:** **Other** (not Node.js — Node.js causes "No entrypoint found").
+4. **Build and Deployment** (dashboard): leave **Build Command** and **Output Directory** empty so `vercel.json` controls them. If you set them manually, use:
+   - Build Command: `npm run build --prefix frontend`
+   - Output Directory: `frontend/build`
 3. **Environment variables** (same project):
 
    | Key | Value |
