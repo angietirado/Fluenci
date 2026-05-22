@@ -20,12 +20,11 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import './styles/DashboardLayout.css';
 
 function App() {
-    try {
-        return (
-            <ErrorBoundary>
-                <AuthProvider>
-                    <Router>
-                        <Routes>
+    return (
+        <ErrorBoundary>
+            <AuthProvider>
+                <Router>
+                    <Routes>
                             {/* Route 1: Initial Role Selection Page */}
                             <Route path="/" element={<RoleSelectionPage />} />
 
@@ -67,20 +66,11 @@ function App() {
 
                             {/* Optional: Add a catch-all route for 404 pages */}
                             {/* <Route path="*" element={<h1>404 Not Found</h1>} /> */}
-                        </Routes>
-                    </Router>
-                </AuthProvider>
-            </ErrorBoundary>
-        );
-    } catch (error) {
-        console.error('App render error:', error);
-        return (
-            <div style={{ padding: '50px', textAlign: 'center' }}>
-                <h1>Application Error</h1>
-                <p>{error.message}</p>
-            </div>
-        );
-    }
+                    </Routes>
+                </Router>
+            </AuthProvider>
+        </ErrorBoundary>
+    );
 }
 
 export default App;
