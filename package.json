@@ -1,0 +1,6 @@
+{
+  "name": "fluenci",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Fluenci monorepo — deployment configured in vercel.json"
+}
