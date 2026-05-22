@@ -6,10 +6,10 @@ import { FaUser, FaSearch, FaMapMarkerAlt, FaChevronLeft, FaChevronRight, FaChev
 import { FaXTwitter } from 'react-icons/fa6';
 import AIChatModal from '../components/AIChatModal';
 import InboxModal from '../components/InboxModal';
-import { API_URL, apiUrl } from '../config/api';
+import { API_URL, API_V1, apiUrl } from '../config/api';
 
-const API_BASE_URL = `${API_URL}/api/campaigns`;
-const BUSINESSES_API_URL = `${API_URL}/api/v1/users/businesses`;
+const API_BASE_URL = `${API_V1}/campaigns`;
+const BUSINESSES_API_URL = `${API_V1}/users/businesses`;
 
 const InfluencerDashboardPage = () => {
     const navigate = useNavigate();

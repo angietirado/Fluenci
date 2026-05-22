@@ -29,6 +29,18 @@ function resolveApiUrl() {
 
 export const API_URL = resolveApiUrl();
 
+/** Base path for versioned REST API, e.g. /api/v1 or https://host/api/v1 */
+export const API_V1 = `${API_URL}/api/v1`;
+
+/** Dashboard path for the logged-in user */
+export function getDashboardPath(user) {
+    if (!user?.role) return '/';
+    if (user.role === 'business') return '/business-dashboard';
+    if (user.role === 'influencer') return '/influencer-dashboard';
+    if (user.role === 'admin') return '/admin/users';
+    return '/';
+}
+
 /** Build a full API or static asset URL from a path like /api/v1/auth/me or /uploads/photo.jpg */
 export function apiUrl(path = '') {
     if (!path) return API_URL;

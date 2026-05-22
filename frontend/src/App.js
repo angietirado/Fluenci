@@ -15,6 +15,11 @@ import BusinessAccountSettingsPage from './pages/BusinessAccountSettingsPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import Messaging from './pages/Messaging';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import CreateCampaign from './pages/CreateCampaign';
+import BusinessCampaigns from './pages/BusinessCampaigns';
+import CampaignDiscovery from './pages/CampaignDiscovery';
+import AnalyticsDashboard from './pages/AnalyticsDashboard';
+import AdminPage from './pages/AdminPage';
 
 // Import your global CSS file where all styles (including graphics) are defined
 import './styles/DashboardLayout.css';
@@ -60,6 +65,12 @@ function App() {
 
                             {/* Route 10: Messaging */}
                             <Route path="/messaging" element={<Messaging />} />
+
+                            <Route path="/campaigns/new" element={<CreateCampaign />} />
+                            <Route path="/my-campaigns" element={<BusinessCampaigns />} />
+                            <Route path="/campaigns" element={<CampaignDiscovery />} />
+                            <Route path="/analytics" element={<AnalyticsDashboard />} />
+                            <Route path="/admin/users" element={<AdminPage />} />
 
                             {/* Route 11: Privacy Policy */}
                             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />

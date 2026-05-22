@@ -22,11 +22,12 @@ const generateMockCampaignData = () => {
  */
 exports.getDashboardAnalytics = async (req, res) => {
     const userId = req.user.id;
-    const userType = req.user.userType;
+    const role = req.user.role;
 
     try {
         let metrics = {
-            userType: userType,
+            userType: role === 'business' ? 'Business' : role === 'influencer' ? 'Influencer' : role,
+            role,
             totalCollaborations: 0,
             averageRating: 0,
             campaignData: generateMockCampaignData()

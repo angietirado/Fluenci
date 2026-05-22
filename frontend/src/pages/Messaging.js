@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { API_URL, apiUrl } from '../config/api';
+import { API_V1 } from '../config/api';
 
-const API_BASE_URL = `${API_URL}/api/messages`;
+const API_BASE_URL = `${API_V1}/messages`;
 
 const Messaging = () => {
     const [conversations, setConversations] = useState([]);
@@ -23,7 +23,7 @@ const Messaging = () => {
 
     useEffect(() => {
         if (!user || !token) {
-            navigate('/login');
+            navigate('/auth');
             return;
         }
 

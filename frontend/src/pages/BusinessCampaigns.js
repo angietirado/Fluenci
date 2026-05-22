@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { API_URL, apiUrl } from '../config/api';
+import { API_V1 } from '../config/api';
 
-const API_BASE_URL = `${API_URL}/api/campaigns`;
-const MSG_API_BASE_URL = `${API_URL}/api/messages`;
+const API_BASE_URL = `${API_V1}/campaigns`;
+const MSG_API_BASE_URL = `${API_V1}/messages`;
 
 const BusinessCampaigns = () => {
     const [campaigns, setCampaigns] = useState([]);
@@ -14,11 +14,11 @@ const BusinessCampaigns = () => {
 
     const user = JSON.parse(localStorage.getItem('user'));
     const token = localStorage.getItem('token');
-    const isBusiness = user && user.userType === 'Business';
+    const isBusiness = user && user.role === 'business';
 
     useEffect(() => {
         if (!isBusiness || !token) {
-            navigate('/login');
+            navigate('/auth');
             return;
         }
 

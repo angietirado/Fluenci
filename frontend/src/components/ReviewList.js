@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { API_URL, apiUrl } from '../config/api';
+import { API_V1 } from '../config/api';
 
-const API_BASE_URL = `${API_URL}/api/reviews`;
+const API_BASE_URL = `${API_V1}/reviews`;
 
 const ReviewList = ({ userId, userName }) => {
     const [reviews, setReviews] = useState([]);

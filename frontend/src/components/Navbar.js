@@ -1,16 +1,19 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { getDashboardPath } from '../config/api';
 
 const Navbar = () => {
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
 
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        navigate('/login');
+        navigate('/auth');
     };
+
+    const dashboardPath = getDashboardPath(user);
 
     return (
         <nav className="bg-white shadow-md fixed w-full top-0 z-10">
@@ -23,10 +26,10 @@ const Navbar = () => {
                         <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                             {token && (
                                 <>
-                                    <Link to="/dashboard" className="text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium hover:text-indigo-600">
+                                    <Link to={dashboardPath} className="text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium hover:text-indigo-600">
                                         Dashboard
                                     </Link>
-                                    {user?.userType === 'Business' && (
+                                    {user?.role === 'business' && (
                                         <>
                                             <Link to="/campaigns/new" className="text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium hover:text-indigo-600">
                                                 Post Offer
@@ -36,12 +39,12 @@ const Navbar = () => {
                                             </Link>
                                         </>
                                     )}
-                                    {user?.userType === 'Influencer' && (
+                                    {user?.role === 'influencer' && (
                                         <Link to="/campaigns" className="text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium hover:text-indigo-600">
                                             Discover
                                         </Link>
                                     )}
-                                    <Link to="/messages" className="text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium hover:text-indigo-600">
+                                    <Link to="/messaging" className="text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium hover:text-indigo-600">
                                         Messages
                                     </Link>
                                     <Link to="/analytics" className="text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium hover:text-indigo-600">
@@ -54,15 +57,15 @@ const Navbar = () => {
                     <div className="flex items-center">
                         {!token ? (
                             <>
-                                <Link to="/login" className="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 mr-2">
+                                <Link to="/auth" className="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 mr-2">
                                     Log In
                                 </Link>
-                                <Link to="/signup" className="px-3 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+                                <Link to="/auth" className="px-3 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
                                     Sign Up
                                 </Link>
                             </>
                         ) : (
-                            <button 
+                            <button
                                 onClick={handleLogout}
                                 className="px-3 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700"
                             >

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { getDashboardPath } from '../config/api';
 
 // This component now accepts a 'requiredRole' prop
 const ProtectedRoute = ({ children, requiredRole }) => {
@@ -27,7 +28,7 @@ const ProtectedRoute = ({ children, requiredRole }) => {
             console.warn(`Access Denied: User role '${userRole}' cannot access route requiring '${requiredRole}'`);
             
             // Redirect unauthorized users to the dashboard
-            return <Navigate to="/dashboard" replace />;
+            return <Navigate to={getDashboardPath(user)} replace />;
         }
     }
 

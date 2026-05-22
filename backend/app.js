@@ -20,6 +20,9 @@ const transactionRoutes = require('./routes/transactionRoutes');
 const socialMediaRoutes = require('./routes/socialMediaRoutes');
 const aiRoutes = require('./routes/aiRoutes');
 const messageRoutes = require('./routes/messageRoutes');
+const campaignRoutes = require('./routes/campaignRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
+const analyticsRoutes = require('./routes/analyticsRoutes');
 
 const app = express();
 
@@ -98,6 +101,9 @@ app.use('/api/v1/transactions', transactionRoutes);
 app.use('/api/v1/social', socialMediaRoutes);
 app.use('/api/v1/ai', aiRoutes);
 app.use('/api/v1/messages', messageRoutes);
+app.use('/api/v1/campaigns', campaignRoutes);
+app.use('/api/v1/reviews', reviewRoutes);
+app.use('/api/v1/analytics', analyticsRoutes);
 
 app.use(errorHandler);
 

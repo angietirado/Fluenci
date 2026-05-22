@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FaArrowLeft, FaEnvelope, FaLock, FaKey } from 'react-icons/fa';
-import { API_URL, apiUrl } from '../config/api';
+import { API_V1 } from '../config/api';
 
 const InfluencerSettingsPage = () => {
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
     const { user, token, dispatch, loading: authLoading } = useAuth();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -63,7 +62,7 @@ const InfluencerSettingsPage = () => {
         }
 
         try {
-            const res = await fetch(`${API_URL}/api/v1/users/profile`, {
+            const res = await fetch(`${API_V1}/users/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -117,7 +116,7 @@ const InfluencerSettingsPage = () => {
         setLoading(true);
 
         try {
-            const res = await fetch(`${API_URL}/api/v1/auth/forgotpassword`, {
+            const res = await fetch(`${API_V1}/auth/forgotpassword`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

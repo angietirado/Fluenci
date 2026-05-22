@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { API_URL, apiUrl } from '../config/api';
+import { API_V1 } from '../config/api';
 
-const API_BASE_URL = `${API_URL}/api/campaigns`;
+const API_BASE_URL = `${API_V1}/campaigns`;
 
 const CampaignDiscovery = () => {
     const [campaigns, setCampaigns] = useState([]);
@@ -14,11 +14,11 @@ const CampaignDiscovery = () => {
 
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user'));
-    const isInfluencer = user?.userType === 'Influencer';
+    const isInfluencer = user?.role === 'influencer';
 
     useEffect(() => {
         if (!token || !isInfluencer) {
-            navigate('/login');
+            navigate('/auth');
             return;
         }
 

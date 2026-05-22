@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { API_URL, apiUrl } from '../config/api';
+import { API_V1, getDashboardPath } from '../config/api';
 
-const API_BASE_URL = `${API_URL}/api/campaigns`;
+const API_BASE_URL = `${API_V1}/campaigns`;
 
 const CreateCampaign = () => {
     const navigate = useNavigate();
@@ -22,8 +22,8 @@ const CreateCampaign = () => {
     const token = localStorage.getItem('token');
     
     useEffect(() => {
-        if (!token || user?.userType !== 'Business') {
-            navigate('/dashboard'); // Restrict access to Businesses only
+        if (!token || user?.role !== 'business') {
+            navigate(getDashboardPath(user));
         }
     }, [token, user, navigate]);
 
