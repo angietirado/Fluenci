@@ -1,4 +1,10 @@
+const dns = require('dns');
 const mongoose = require('mongoose');
+
+// Windows DNS sometimes fails SRV lookups for mongodb+srv (querySrv ECONNREFUSED)
+if (process.platform === 'win32') {
+    dns.setServers(['8.8.8.8', '8.8.4.4']);
+}
 
 const connectDB = async () => {
     try {

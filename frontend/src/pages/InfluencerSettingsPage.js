@@ -127,7 +127,7 @@ const InfluencerSettingsPage = () => {
             const data = await res.json();
 
             if (res.ok && data.success) {
-                setSuccess('Password reset email sent! Please check your inbox for instructions.');
+                setSuccess(data.message || 'Password reset email sent! Check your inbox and spam folder.');
                 setShowResetPassword(false);
             } else {
                 setError(data.error || 'Failed to send password reset email. Please try again.');

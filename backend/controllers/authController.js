@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
+const { isEmailConfigured, sendPasswordResetEmail } = require('../utils/sendEmail');
 
 // Helper function to get token from model and send response
 // MOVED TO THE TOP so register and login can access it
@@ -182,33 +183,58 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
         return next(new ErrorResponse('Please provide an email', 400));
     }
 
-    const user = await User.findOne({ email });
+    const normalizedEmail = email.toLowerCase().trim();
+    const escapedEmail = normalizedEmail.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const user = await User.findOne({
+        email: { $regex: new RegExp(`^${escapedEmail}$`, 'i') }
+    });
+
+    const genericMessage =
+        'If that email is registered, a password reset link has been sent. Check your inbox and spam folder.';
 
     if (!user) {
-        // Don't reveal if email exists or not for security
         return res.status(200).json({
             success: true,
-            message: 'If that email exists, a password reset link has been sent.'
+            message: genericMessage
         });
     }
 
-    // Get reset token
+    if (!isEmailConfigured()) {
+        return next(new ErrorResponse(
+            'Password reset email is not configured. Add SMTP settings to backend/config/config.env (see comments in that file).',
+            503
+        ));
+    }
+
     const resetToken = user.getResetPasswordToken();
 
-    await user.save({ validateBeforeSave: false });
+    try {
+        await user.save({ validateBeforeSave: false });
 
-    // Create reset url (for now, just return the token)
-    // In production, you would send this via email
-    const resetUrl = `${req.protocol}://${req.get('host')}/reset-password/${resetToken}`;
+        const frontendUrl = (process.env.FRONTEND_URL || 'http://localhost:3000').replace(/\/$/, '');
+        const resetUrl = `${frontendUrl}/resetpassword/${resetToken}`;
 
-    // For development, log the reset URL
-    console.log('Reset Password URL:', resetUrl);
+        await sendPasswordResetEmail({
+            email: user.email,
+            name: user.name,
+            resetUrl
+        });
 
-    res.status(200).json({
-        success: true,
-        message: 'Password reset email sent',
-        resetToken: resetToken // Only for development - remove in production
-    });
+        res.status(200).json({
+            success: true,
+            message: genericMessage
+        });
+    } catch (err) {
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+        await user.save({ validateBeforeSave: false });
+
+        console.error('Forgot password email error:', err.message);
+        return next(new ErrorResponse(
+            'Could not send reset email. Check SMTP settings in config.env and try again.',
+            500
+        ));
+    }
 });
 
 // @desc    Reset password

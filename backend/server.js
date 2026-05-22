@@ -46,6 +46,17 @@ if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
+// Root — API only; use the React app at localhost:3000 for the UI
+app.get('/', (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: 'Fluenci API is running',
+        docs: 'Use /api/health to verify the server. The web app runs on http://localhost:3000',
+        health: '/api/health',
+        apiBase: '/api/v1'
+    });
+});
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
     res.status(200).json({

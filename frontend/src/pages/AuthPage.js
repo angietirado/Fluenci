@@ -62,28 +62,16 @@ const AuthPage = () => {
 
             const data = await res.json();
 
-            if (data.success) {
-                // If we have a reset token (development mode), navigate to reset page
-                if (data.resetToken) {
-                    setResetMessage({ 
-                        type: 'success', 
-                        text: 'Redirecting to password reset page...' 
-                    });
-                    setTimeout(() => {
-                        navigate(`/resetpassword/${data.resetToken}`);
-                    }, 1000);
-                } else {
-                    // Production mode - email sent
-                    setResetMessage({ 
-                        type: 'success', 
-                        text: 'Password reset email sent! Check your inbox.' 
-                    });
-                    setResetEmail('');
-                    setTimeout(() => {
-                        setShowForgotPassword(false);
-                        setResetMessage(null);
-                    }, 3000);
-                }
+            if (res.ok && data.success) {
+                setResetMessage({
+                    type: 'success',
+                    text: data.message || 'If that email is registered, a password reset link has been sent. Check your inbox and spam folder.'
+                });
+                setResetEmail('');
+                setTimeout(() => {
+                    setShowForgotPassword(false);
+                    setResetMessage(null);
+                }, 5000);
             } else {
                 setResetMessage({ type: 'error', text: data.error || 'Failed to send reset email.' });
             }
