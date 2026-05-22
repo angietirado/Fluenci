@@ -23,7 +23,17 @@ const messageRoutes = require('./routes/messageRoutes');
 
 const app = express();
 
-const corsOrigins = ['http://localhost:3000', process.env.FRONTEND_URL].filter(Boolean);
+const allowedOrigins = new Set(
+    ['http://localhost:3000', process.env.FRONTEND_URL].filter(Boolean)
+);
+
+const isAllowedOrigin = (origin) => {
+    if (!origin) return true;
+    if (allowedOrigins.has(origin)) return true;
+    // Vercel production + preview URLs (e.g. fluenci-xxx.vercel.app)
+    if (/^https:\/\/[a-z0-9-]+(\.[a-z0-9-]+)*\.vercel\.app$/i.test(origin)) return true;
+    return false;
+};
 
 app.use(express.json());
 app.use(cookieParser());
@@ -35,7 +45,13 @@ app.use('/uploads', express.static(uploadsPath));
 
 app.use(
     cors({
-        origin: corsOrigins.length > 0 ? corsOrigins : true,
+        origin(origin, callback) {
+            if (isAllowedOrigin(origin)) {
+                callback(null, origin || true);
+            } else {
+                callback(null, false);
+            }
+        },
         credentials: true,
     })
 );
