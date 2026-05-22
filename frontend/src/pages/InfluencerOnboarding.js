@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { FaUser, FaMapMarkerAlt, FaBriefcase, FaInstagram, FaYoutube, FaTiktok, FaFacebook, FaLinkedin, FaCamera, FaSnapchat, FaPinterest, FaArrowLeft, FaGlobe, FaFileAlt } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import SocialConnectModal from '../components/SocialConnectModal';
+import { API_URL, apiUrl } from '../config/api';
 
 // Social Connect Button Component
 const SocialConnectButton = ({ platform, icon, token, onConnect, connected }) => {
@@ -236,7 +237,7 @@ const InfluencerOnboarding = () => {
                 setProfilePicturePreview(
                     user.profilePicture.startsWith('http') 
                         ? user.profilePicture 
-                        : `http://localhost:5000${user.profilePicture}`
+                        : apiUrl(user.profilePicture)
                 );
             }
         }
@@ -247,7 +248,7 @@ const InfluencerOnboarding = () => {
         if (!token) return;
 
         try {
-            const res = await fetch('http://localhost:5000/api/v1/social/connections', {
+            const res = await fetch(`${API_URL}/api/v1/social/connections`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -429,7 +430,7 @@ const InfluencerOnboarding = () => {
                 formDataToSend.append('profilePicture', profilePicture);
             }
 
-            const res = await fetch('http://localhost:5000/api/v1/users/onboarding', {
+            const res = await fetch(`${API_URL}/api/v1/users/onboarding`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -448,7 +449,7 @@ const InfluencerOnboarding = () => {
             if (data.success) {
                 // Fetch updated user data to refresh context
                 try {
-                    const userRes = await fetch('http://localhost:5000/api/v1/auth/me', {
+                    const userRes = await fetch(`${API_URL}/api/v1/auth/me`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',

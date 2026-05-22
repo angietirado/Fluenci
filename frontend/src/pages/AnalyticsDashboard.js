@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import { API_URL, apiUrl } from '../config/api';
 
 // Register Chart.js components (Make sure to run: npm install chart.js react-chartjs-2)
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-const API_BASE_URL = 'http://localhost:5000/api/analytics';
+const API_BASE_URL = `${API_URL}/api/analytics`;
 
 const AnalyticsDashboard = () => {
     const [metrics, setMetrics] = useState(null);

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { API_URL, apiUrl } from '../config/api';
 
 const SocialCallback = () => {
     const [searchParams] = useSearchParams();
@@ -139,7 +140,7 @@ const SocialCallback = () => {
                     requestBody.code = code;
                 }
 
-                const res = await fetch(`http://localhost:5000/api/v1/social/complete/${platform}`, {
+                const res = await fetch(`${API_URL}/api/v1/social/complete/${platform}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -165,7 +166,7 @@ const SocialCallback = () => {
 
                     // Refresh user data
                     try {
-                        const userRes = await fetch('http://localhost:5000/api/v1/auth/me', {
+                        const userRes = await fetch(`${API_URL}/api/v1/auth/me`, {
                             headers: {
                                 'Authorization': `Bearer ${token}`
                             }

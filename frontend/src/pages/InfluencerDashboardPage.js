@@ -6,9 +6,10 @@ import { FaUser, FaSearch, FaMapMarkerAlt, FaChevronLeft, FaChevronRight, FaChev
 import { FaXTwitter } from 'react-icons/fa6';
 import AIChatModal from '../components/AIChatModal';
 import InboxModal from '../components/InboxModal';
+import { API_URL, apiUrl } from '../config/api';
 
-const API_BASE_URL = 'http://localhost:5000/api/campaigns';
-const BUSINESSES_API_URL = 'http://localhost:5000/api/v1/users/businesses';
+const API_BASE_URL = `${API_URL}/api/campaigns`;
+const BUSINESSES_API_URL = `${API_URL}/api/v1/users/businesses`;
 
 const InfluencerDashboardPage = () => {
     const navigate = useNavigate();
@@ -531,7 +532,7 @@ const InfluencerDashboardPage = () => {
             const formData = new FormData();
             formData.append('profilePicture', file);
 
-            const response = await fetch('http://localhost:5000/api/v1/users/profile', {
+            const response = await fetch(`${API_URL}/api/v1/users/profile`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -543,7 +544,7 @@ const InfluencerDashboardPage = () => {
 
             if (data.success) {
                 // Refetch user data to get updated profile picture
-                const userResponse = await fetch('http://localhost:5000/api/v1/auth/me', {
+                const userResponse = await fetch(`${API_URL}/api/v1/auth/me`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -646,7 +647,7 @@ const InfluencerDashboardPage = () => {
                             <img
                                 src={profilePicturePreview || (user?.profilePicture?.startsWith('http') 
                                     ? user.profilePicture 
-                                    : `http://localhost:5000${user.profilePicture}`)}
+                                    : apiUrl(user.profilePicture))}
                                 alt="Profile"
                                 style={{
                                     width: '100%',
@@ -1273,7 +1274,7 @@ const InfluencerDashboardPage = () => {
                                                 <img
                                                     src={business.profilePicture.startsWith('http') 
                                                         ? business.profilePicture 
-                                                        : `http://localhost:5000${business.profilePicture}`}
+                                                        : apiUrl(business.profilePicture)}
                                                     alt={business.name}
                                                     style={{
                                                         width: '100%',
@@ -1699,7 +1700,7 @@ const InfluencerDashboardPage = () => {
                                         <img
                                             src={selectedBusiness.profilePicture.startsWith('http')
                                                 ? selectedBusiness.profilePicture
-                                                : `http://localhost:5000${selectedBusiness.profilePicture}`}
+                                                : apiUrl(selectedBusiness.profilePicture)}
                                             alt={selectedBusiness.name}
                                             style={{
                                                 width: '100%',

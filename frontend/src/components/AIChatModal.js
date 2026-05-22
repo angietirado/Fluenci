@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaTimes, FaPaperPlane, FaRobot } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
+import { API_URL, apiUrl } from '../config/api';
 
 const AIChatModal = ({ isOpen, onClose }) => {
     const { user } = useAuth();
@@ -35,7 +36,7 @@ const AIChatModal = ({ isOpen, onClose }) => {
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:5000/api/v1/ai/chat', {
+            const response = await fetch(`${API_URL}/api/v1/ai/chat`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

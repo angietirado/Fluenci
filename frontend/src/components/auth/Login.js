@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FaUser, FaLock } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { API_URL, apiUrl } from '../../config/api';
 
 const Login = ({ onAuthSuccess, role }) => {
     const [email, setEmail] = useState('');
@@ -23,7 +24,7 @@ const Login = ({ onAuthSuccess, role }) => {
         setLoading(true);
 
         try {
-            const res = await fetch('http://localhost:5000/api/v1/auth/login', {
+            const res = await fetch(`${API_URL}/api/v1/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -90,7 +91,7 @@ const Login = ({ onAuthSuccess, role }) => {
             
             // More specific error messages
             if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
-                setError('Cannot connect to server. Please make sure the backend is running on http://localhost:5000');
+                setError(`Cannot connect to server at ${API_URL}. Check that the backend is running.`);
             } else if (err.message.includes('JSON')) {
                 setError('Server returned an invalid response. Please check the backend logs.');
             } else {

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { FaTimes, FaEnvelope, FaPaperPlane, FaUser, FaTrash } from 'react-icons/fa';
 import axios from 'axios';
+import { API_URL, apiUrl } from '../config/api';
 
-const API_BASE_URL = 'http://localhost:5000/api/v1/messages';
+const API_BASE_URL = `${API_URL}/api/v1/messages`;
 
 const InboxModal = ({ isOpen, onClose, user, token, initialRecipientId = null, initialRecipientName = null, onConversationRead = null }) => {
     const [conversations, setConversations] = useState([]);
@@ -1003,7 +1004,7 @@ const InboxModal = ({ isOpen, onClose, user, token, initialRecipientId = null, i
                                                         <img
                                                             src={otherParticipant.profilePicture.startsWith('http')
                                                                 ? otherParticipant.profilePicture
-                                                                : `http://localhost:5000${otherParticipant.profilePicture}`}
+                                                                : apiUrl(otherParticipant.profilePicture)}
                                                             alt={otherParticipant.name}
                                                             style={{
                                                                 width: '100%',

@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Login from '../components/auth/Login';
 import Register from '../components/auth/Register';
 import { FaArrowLeft, FaUser } from 'react-icons/fa';
+import { API_URL, apiUrl } from '../config/api';
 
 const AuthPage = () => {
     const [isRegister, setIsRegister] = useState(false);
@@ -52,7 +53,7 @@ const AuthPage = () => {
         setResetLoading(true);
 
         try {
-            const res = await fetch('http://localhost:5000/api/v1/auth/forgotpassword', {
+            const res = await fetch(`${API_URL}/api/v1/auth/forgotpassword`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

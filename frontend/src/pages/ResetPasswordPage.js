@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FaLock } from 'react-icons/fa';
+import { API_URL, apiUrl } from '../config/api';
 
 const ResetPasswordPage = () => {
     const [password, setPassword] = useState('');
@@ -35,7 +36,7 @@ const ResetPasswordPage = () => {
         setLoading(true);
 
         try {
-            const res = await fetch(`http://localhost:5000/api/v1/auth/resetpassword/${resetToken}`, {
+            const res = await fetch(`${API_URL}/api/v1/auth/resetpassword/${resetToken}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { FaUserCircle, FaEnvelope, FaGlobe, FaFileAlt } from 'react-icons/fa';
+import { API_URL, apiUrl } from '../../config/api';
 
 const ProfileSettingsForm = () => {
     const { user, token, loadUser } = useAuth();
@@ -28,7 +29,7 @@ const ProfileSettingsForm = () => {
         setSuccessMsg(null);
 
         try {
-            const res = await fetch('http://localhost:5000/api/v1/users/profile', {
+            const res = await fetch(`${API_URL}/api/v1/users/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

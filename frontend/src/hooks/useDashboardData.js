@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { API_URL, apiUrl } from '../config/api';
 
 // 🚨 Accept refreshTrigger as a destructured property
 const useDashboardData = ({ refreshTrigger }) => { 
@@ -27,7 +28,7 @@ const useDashboardData = ({ refreshTrigger }) => {
             setError(null);
 
             try {
-                const res = await fetch('http://localhost:5000/api/v1/data/dashboard', {
+                const res = await fetch(`${API_URL}/api/v1/data/dashboard`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

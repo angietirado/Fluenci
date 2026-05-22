@@ -1,4 +1,5 @@
 import React, { createContext, useReducer, useEffect, useContext, useCallback } from 'react';
+import { API_URL, apiUrl } from '../config/api';
 
 // 1. Initial State
 // Safely get token from localStorage (check if window is available)
@@ -73,7 +74,7 @@ export const AuthProvider = ({ children }) => {
     // being redefined on every render.
     const fetchCurrentUser = useCallback(async (current_token) => {
         try {
-            const res = await fetch('http://localhost:5000/api/v1/auth/me', {
+            const res = await fetch(`${API_URL}/api/v1/auth/me`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

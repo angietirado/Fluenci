@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { FaInstagram, FaFacebook, FaTimes, FaCheckCircle, FaArrowLeft } from 'react-icons/fa';
 import FacebookLoginButton from './FacebookLoginButton';
+import { API_URL, apiUrl } from '../config/api';
 
 const SocialConnectModal = ({ platform, isOpen, onClose, onSuccess }) => {
     const { user, token, dispatch } = useAuth();
@@ -69,7 +70,7 @@ const SocialConnectModal = ({ platform, isOpen, onClose, onSuccess }) => {
         if (!token) return false;
 
         try {
-            const res = await fetch('http://localhost:5000/api/v1/social/connections', {
+            const res = await fetch(`${API_URL}/api/v1/social/connections`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -132,7 +133,7 @@ const SocialConnectModal = ({ platform, isOpen, onClose, onSuccess }) => {
             sessionStorage.setItem('oauth_return_url', returnUrl);
             localStorage.setItem('oauth_return_url_backup', returnUrl);
 
-            const res = await fetch(`http://localhost:5000/api/v1/social/connect/${platform}`, {
+            const res = await fetch(`${API_URL}/api/v1/social/connect/${platform}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -188,7 +189,7 @@ const SocialConnectModal = ({ platform, isOpen, onClose, onSuccess }) => {
         setSavingManual(true);
 
         try {
-            const res = await fetch('http://localhost:5000/api/v1/users/profile', {
+            const res = await fetch(`${API_URL}/api/v1/users/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -438,7 +439,7 @@ const SocialConnectModal = ({ platform, isOpen, onClose, onSuccess }) => {
                                     onLoginSuccess={async (response) => {
                                         if (response.status === 'connected' && response.authResponse) {
                                             try {
-                                                const res = await fetch('http://localhost:5000/api/v1/social/callback/facebook-sdk', {
+                                                const res = await fetch(`${API_URL}/api/v1/social/callback/facebook-sdk`, {
                                                     method: 'POST',
                                                     headers: {
                                                         'Content-Type': 'application/json',

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaDollarSign, FaComment, FaMoneyBillWave, FaCoins } from 'react-icons/fa';
 import { useAuth } from '../../context/AuthContext';
+import { API_URL, apiUrl } from '../../config/api';
 
 // Accept transactionToEdit (for PUT) and onCancelEdit (for closing the form)
 const TransactionForm = ({ onTransactionAdded, transactionToEdit, onCancelEdit }) => {
@@ -55,8 +56,8 @@ const TransactionForm = ({ onTransactionAdded, transactionToEdit, onCancelEdit }
 
         const method = isEditMode ? 'PUT' : 'POST';
         const url = isEditMode 
-            ? `http://localhost:5000/api/v1/transactions/${transactionToEdit._id}`
-            : 'http://localhost:5000/api/v1/transactions';
+            ? `${API_URL}/api/v1/transactions/${transactionToEdit._id}`
+            : `${API_URL}/api/v1/transactions`;
 
         try {
             const res = await fetch(url, {

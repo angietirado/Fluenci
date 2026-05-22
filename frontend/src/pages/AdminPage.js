@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/layout/Header';
 import Sidebar from '../components/layout/Sidebar';
 import { useAuth } from '../context/AuthContext'; 
+import { API_URL, apiUrl } from '../config/api';
 
 const AdminPage = () => {
     const { token } = useAuth();
@@ -17,7 +18,7 @@ const AdminPage = () => {
             setError(null);
             
             try {
-                const res = await fetch('http://localhost:5000/api/v1/users', {
+                const res = await fetch(`${API_URL}/api/v1/users`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

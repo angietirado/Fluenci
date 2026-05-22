@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { FaLock } from 'react-icons/fa';
+import { API_URL, apiUrl } from '../../config/api';
 
 const PasswordSettingsForm = () => {
     const { token, logout } = useAuth(); // We'll log the user out after a successful password change
@@ -39,7 +40,7 @@ const PasswordSettingsForm = () => {
         }
         
         try {
-            const res = await fetch('http://localhost:5000/api/v1/users/password', {
+            const res = await fetch(`${API_URL}/api/v1/users/password`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

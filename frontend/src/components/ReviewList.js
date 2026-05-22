@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL, apiUrl } from '../config/api';
 
-const API_BASE_URL = 'http://localhost:5000/api/reviews';
+const API_BASE_URL = `${API_URL}/api/reviews`;
 
 const ReviewList = ({ userId, userName }) => {
     const [reviews, setReviews] = useState([]);

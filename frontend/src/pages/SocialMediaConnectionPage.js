@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { FaArrowLeft, FaInstagram, FaYoutube, FaTiktok, FaFacebook, FaLinkedin, FaSnapchat, FaPinterest, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import FacebookLoginButton from '../components/FacebookLoginButton';
+import { API_URL, apiUrl } from '../config/api';
 
 const SocialMediaConnectionPage = () => {
     const { platform } = useParams();
@@ -154,7 +155,7 @@ const SocialMediaConnectionPage = () => {
         if (!token) return;
 
         try {
-            const res = await fetch('http://localhost:5000/api/v1/social/connections', {
+            const res = await fetch(`${API_URL}/api/v1/social/connections`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -176,7 +177,7 @@ const SocialMediaConnectionPage = () => {
         setLoading(true);
 
         try {
-            const res = await fetch(`http://localhost:5000/api/v1/social/connect/${platform}`, {
+            const res = await fetch(`${API_URL}/api/v1/social/connect/${platform}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -258,7 +259,7 @@ const SocialMediaConnectionPage = () => {
         }
 
         try {
-            const res = await fetch('http://localhost:5000/api/v1/users/profile', {
+            const res = await fetch(`${API_URL}/api/v1/users/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -278,7 +279,7 @@ const SocialMediaConnectionPage = () => {
                 
                 // Update user context
                 try {
-                    const userRes = await fetch('http://localhost:5000/api/v1/auth/me', {
+                    const userRes = await fetch(`${API_URL}/api/v1/auth/me`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -514,7 +515,7 @@ const SocialMediaConnectionPage = () => {
                                     if (response.status === 'connected' && response.authResponse) {
                                         try {
                                             // Send access token to backend to complete OAuth flow
-                                            const res = await fetch('http://localhost:5000/api/v1/social/callback/facebook-sdk', {
+                                            const res = await fetch(`${API_URL}/api/v1/social/callback/facebook-sdk`, {
                                                 method: 'POST',
                                                 headers: {
                                                     'Content-Type': 'application/json',

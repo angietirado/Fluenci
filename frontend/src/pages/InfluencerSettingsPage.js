@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FaArrowLeft, FaEnvelope, FaLock, FaKey } from 'react-icons/fa';
+import { API_URL, apiUrl } from '../config/api';
 
 const InfluencerSettingsPage = () => {
     const navigate = useNavigate();
@@ -62,7 +63,7 @@ const InfluencerSettingsPage = () => {
         }
 
         try {
-            const res = await fetch('http://localhost:5000/api/v1/users/profile', {
+            const res = await fetch(`${API_URL}/api/v1/users/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -80,7 +81,7 @@ const InfluencerSettingsPage = () => {
                 
                 // Update user context
                 try {
-                    const userRes = await fetch('http://localhost:5000/api/v1/auth/me', {
+                    const userRes = await fetch(`${API_URL}/api/v1/auth/me`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -116,7 +117,7 @@ const InfluencerSettingsPage = () => {
         setLoading(true);
 
         try {
-            const res = await fetch('http://localhost:5000/api/v1/auth/forgotpassword', {
+            const res = await fetch(`${API_URL}/api/v1/auth/forgotpassword`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
