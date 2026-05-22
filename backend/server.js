@@ -1,3 +1,4 @@
+const fs = require('fs');
 const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
@@ -6,88 +7,105 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const path = require('path');
 const connectDB = require('./config/db');
-const errorHandler = require('./middleware/errorHandler'); // <-- MUST BE 'errorHandler'
+const errorHandler = require('./middleware/errorHandler');
 
-// Load environment variables
-dotenv.config({ path: './config/config.env' });
-
-// Connect to database
-connectDB();
+// Local dev: load config.env. Vercel/production: use dashboard env vars.
+const envPath = path.join(__dirname, 'config', 'config.env');
+if (fs.existsSync(envPath)) {
+    dotenv.config({ path: envPath });
+}
 
 // Route files
 const authRoutes = require('./routes/authRoutes');
-const dataRoutes = require('./routes/dataRoutes'); // <-- NEW IMPORT
-const userRoutes = require('./routes/userRoutes'); // <-- NEW IMPORT
-const transactionRoutes = require('./routes/transactionRoutes'); // <-- NEW IMPORT
-const socialMediaRoutes = require('./routes/socialMediaRoutes'); // <-- NEW IMPORT
-const aiRoutes = require('./routes/aiRoutes'); // <-- NEW IMPORT FOR AI CHAT
-const messageRoutes = require('./routes/messageRoutes'); // <-- NEW IMPORT FOR MESSAGING
+const dataRoutes = require('./routes/dataRoutes');
+const userRoutes = require('./routes/userRoutes');
+const transactionRoutes = require('./routes/transactionRoutes');
+const socialMediaRoutes = require('./routes/socialMediaRoutes');
+const aiRoutes = require('./routes/aiRoutes');
+const messageRoutes = require('./routes/messageRoutes');
 
 const app = express();
 
-// Body parser (for JSON data)
+const corsOrigins = [
+    'http://localhost:3000',
+    process.env.FRONTEND_URL,
+].filter(Boolean);
+
 app.use(express.json());
-
-// Cookie parser
 app.use(cookieParser());
-
-// Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Enable CORS (Cross-Origin Resource Sharing)
-// This allows your frontend (running on a different port/domain) to connect.
-app.use(cors({
-    origin: 'http://localhost:3000', // Allow only your React frontend
-    credentials: true
-}));
+app.use(
+    cors({
+        origin: (origin, callback) => {
+            if (!origin || corsOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error(`CORS blocked for origin: ${origin}`));
+            }
+        },
+        credentials: true,
+    })
+);
 
-// Dev logging middleware (using morgan)
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
-// Root — API only; use the React app at localhost:3000 for the UI
+// Ensure MongoDB is connected before API routes (required on Vercel serverless)
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (err) {
+        console.error(err.message);
+        res.status(503).json({
+            success: false,
+            message: 'Database connection failed',
+        });
+    }
+});
+
 app.get('/', (req, res) => {
     res.status(200).json({
         success: true,
         message: 'Fluenci API is running',
-        docs: 'Use /api/health to verify the server. The web app runs on http://localhost:3000',
         health: '/api/health',
-        apiBase: '/api/v1'
+        apiBase: '/api/v1',
     });
 });
 
-// Health check endpoint
 app.get('/api/health', (req, res) => {
     res.status(200).json({
         success: true,
         message: 'Server is running',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
     });
 });
 
-// Mount Routers
 app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/data', dataRoutes); // <-- NEW ROUTE MOUNTED FOR DASHBOARD DATA
-app.use('/api/v1/users', userRoutes); // <-- NEW ROUTE MOUNTED
-app.use('/api/v1/transactions', transactionRoutes); // <-- NEW ROUTE MOUNTED
-app.use('/api/v1/social', socialMediaRoutes); // <-- NEW ROUTE MOUNTED FOR SOCIAL MEDIA CONNECTIONS
-app.use('/api/v1/ai', aiRoutes); // <-- NEW ROUTE MOUNTED FOR AI CHAT
-app.use('/api/v1/messages', messageRoutes); // <-- NEW ROUTE MOUNTED FOR MESSAGING
+app.use('/api/v1/data', dataRoutes);
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/transactions', transactionRoutes);
+app.use('/api/v1/social', socialMediaRoutes);
+app.use('/api/v1/ai', aiRoutes);
+app.use('/api/v1/messages', messageRoutes);
 
-// Must be after mounting routes
-app.use(errorHandler); // <-- Uses the imported function
+app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
+// Vercel serverless: export the app (no app.listen). Local: start HTTP server.
+module.exports = app;
 
-const server = app.listen(
-    PORT,
-    console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold)
-);
+if (!process.env.VERCEL) {
+    const PORT = process.env.PORT || 5000;
+    const server = app.listen(PORT, () => {
+        console.log(
+            `Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`.yellow.bold
+        );
+    });
 
-// Handle unhandled promise rejections (e.g., bad MongoDB connection string)
-process.on('unhandledRejection', (err, promise) => {
-    console.log(`Error: ${err?.message || 'Unhandled Promise Rejection'}`.red);
-    // Close server & exit process
-    server.close(() => process.exit(1));
-});
+    process.on('unhandledRejection', (err) => {
+        console.log(`Error: ${err?.message || 'Unhandled Promise Rejection'}`.red);
+        server.close(() => process.exit(1));
+    });
+}

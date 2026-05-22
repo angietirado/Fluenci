@@ -6,14 +6,37 @@ if (process.platform === 'win32') {
     dns.setServers(['8.8.8.8', '8.8.4.4']);
 }
 
-const connectDB = async () => {
-    try {
-        const conn = await mongoose.connect(process.env.MONGO_URI); 
+let cached = global.mongoose;
 
-        console.log(`MongoDB Connected: ${conn.connection.host}`);
+if (!cached) {
+    cached = global.mongoose = { conn: null, promise: null };
+}
+
+const connectDB = async () => {
+    if (!process.env.MONGO_URI) {
+        throw new Error(
+            'MONGO_URI is not defined. Set it in Vercel Environment Variables or backend/config/config.env'
+        );
+    }
+
+    if (cached.conn) {
+        return cached.conn;
+    }
+
+    if (!cached.promise) {
+        cached.promise = mongoose.connect(process.env.MONGO_URI).then((m) => {
+            console.log(`MongoDB Connected: ${m.connection.host}`);
+            return m;
+        });
+    }
+
+    try {
+        cached.conn = await cached.promise;
+        return cached.conn;
     } catch (error) {
+        cached.promise = null;
         console.error(`Error connecting to MongoDB: ${error.message}`);
-        process.exit(1);
+        throw error;
     }
 };
 
